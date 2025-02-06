@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { PostsController } from './posts.controller';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -14,6 +15,9 @@ import { PostsController } from './posts.controller';
         },
       },
     ]),
+    MulterModule.register({
+      dest: './uploads',
+    }),
   ],
   controllers: [PostsController],
   providers: [],
