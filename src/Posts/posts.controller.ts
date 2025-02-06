@@ -1,4 +1,13 @@
-import { Body,  Controller,  Post,  UnauthorizedException,  Headers,  UseInterceptors,  UploadedFile } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  UnauthorizedException,
+  Headers,
+  UseInterceptors,
+  UploadedFile,
+  Get
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Inject } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -30,11 +39,12 @@ export class PostsController {
           }
         : undefined,
     };
-    console.log('Payload sent to microservice:', {
-      ...payload,
-      file: payload.file ? { ...payload.file, buffer: 'Buffer data' } : undefined,
-    });
     return this.postsService.send({ cmd: 'createPost' }, payload);
+  }
+
+  @Get('getAll')
+   getAllPosts() {
+    return this.postsService.send({ cmd: 'getAll' }, {}).toPromise();
   }
 
   private async readFileAsBuffer(filePath: string): Promise<Buffer> {
