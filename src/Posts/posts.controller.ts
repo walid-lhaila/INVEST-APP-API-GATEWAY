@@ -47,6 +47,13 @@ export class PostsController {
     return this.postsService.send({ cmd: 'getAll' }, {}).toPromise();
   }
 
+  @Get('getAllPostsByUserId')
+  getAllPostsByUserId(@Headers('authorization') token: string) {
+    return this.postsService
+      .send({ cmd: 'getAllPostsByUserId' }, { token })
+      .toPromise();
+  }
+
   private async readFileAsBuffer(filePath: string): Promise<Buffer> {
     return new Promise((resolve, reject) => {
       const chunks: Buffer[] = [];
