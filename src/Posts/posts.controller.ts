@@ -6,7 +6,7 @@ import {
   Headers,
   UseInterceptors,
   UploadedFile,
-  Get
+  Get, Delete, Param
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Inject } from '@nestjs/common';
@@ -52,6 +52,14 @@ export class PostsController {
     return this.postsService
       .send({ cmd: 'getAllPostsByUserId' }, { token })
       .toPromise();
+  }
+
+  @Delete('delete/:postId')
+  async deletPost(@Param('postId') postId: string, @Headers('authorization') token: string) {
+      if(!token) {
+        throw  new UnauthorizedException('TOKEN IS REQUIRED');
+      }
+    return this.postsService.send({ cmd: 'deletePost' }, {token, postId}).toPromise();
   }
 
   private async readFileAsBuffer(filePath: string): Promise<Buffer> {
