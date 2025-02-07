@@ -6,7 +6,7 @@ import {
   Headers,
   UseInterceptors,
   UploadedFile,
-  Get, Delete, Param
+  Get, Delete, Param, Put
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Inject } from '@nestjs/common';
@@ -55,12 +55,39 @@ export class PostsController {
   }
 
   @Delete('delete/:postId')
-  async deletPost(@Param('postId') postId: string, @Headers('authorization') token: string) {
+  async deletePost(@Param('postId') postId: string, @Headers('authorization') token: string) {
       if(!token) {
         throw  new UnauthorizedException('TOKEN IS REQUIRED');
       }
     return this.postsService.send({ cmd: 'deletePost' }, {token, postId}).toPromise();
   }
+
+  @Put('update/:postId')
+  @UseInterceptors(FileInterceptor('image', { dest: './uploads' }))
+  async updatePost(@Param('postId') postId: string,  @Body() updateData: any,  @Headers('authorization') token: string, @UploadedFile() file: Express.Multer.File) {
+    if(!token) {
+      throw new UnauthorizedException('TOKEN IS REQUIRED');
+    }
+    let fileBuffer: Buffer | undefined;
+    if(file) {
+      fileBuffer = await this.readFileAsBuffer(file.path);
+    }
+
+    const payload = {
+      token,
+      postId,
+      payload: updateData,
+      file: fileBuffer ? {
+        buffer: fileBuffer.toString('base64'),
+        originalname: file.originalname,
+        mimetype: file.mimetype
+      } : undefined,
+    };
+
+
+    return this.postsService.send({ cmd: 'updatePost' }, payload).toPromise();
+  }
+
 
   private async readFileAsBuffer(filePath: string): Promise<Buffer> {
     return new Promise((resolve, reject) => {
