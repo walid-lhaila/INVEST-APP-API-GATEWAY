@@ -4,7 +4,7 @@ import {
   Inject,
   Post,
   Headers,
-  UnauthorizedException,
+  UnauthorizedException, Get,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
@@ -28,4 +28,14 @@ export class ProjectsController {
     };
     return this.projectsService.send({ cmd: 'createProjects' }, payload);
   }
+
+  @Get('getAll')
+  getProjectsByUser(@Headers('authorization') token: string) {
+    if(!token) {
+      throw new UnauthorizedException('TOKEN IS REQUIRED');
+    }
+    return this.projectsService.send({ cmd: 'getProjects' }, { token }).toPromise();
+  }
+
+
 }
