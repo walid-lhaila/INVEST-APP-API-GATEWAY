@@ -4,7 +4,7 @@ import {
   Inject,
   Post,
   Headers,
-  UnauthorizedException, Get,
+  UnauthorizedException, Get, Delete, Param,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
@@ -37,5 +37,16 @@ export class ProjectsController {
     return this.projectsService.send({ cmd: 'getProjects' }, { token }).toPromise();
   }
 
+  @Delete('delete/:projectId')
+  async deleteProject(@Param('projectId') projectId: string, @Headers('authorization') token: string) {
+    if(!token) {
+      throw new UnauthorizedException('TOKEN IS REQUIRED');
+    }
+
+    if(!projectId) {
+      throw new Error('PROJECT ID REQUIRED OR NOT FOUND')
+    }
+    return this.projectsService.send({ cmd: 'deleteProject' }, {token, projectId}).toPromise();
+}
 
 }
