@@ -57,4 +57,15 @@ export class MessagesController {
       { autHeader, receiverId },
     );
   }
+
+  @Get()
+  async getAllConversation(@Headers('authorization') autHeader: string) {
+    if (!autHeader) {
+      throw new UnauthorizedException('Missing Authorization Token');
+    }
+    return this.messagesService.send(
+        { cmd: 'get-all-conversations' },
+        { autHeader },
+    );
+  }
 }
