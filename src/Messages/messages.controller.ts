@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Get,
   Headers,
   Inject,
+  Param,
   Post,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -40,5 +42,19 @@ export class MessagesController {
       })
       .toPromise();
     return { message: 'Message sent successfully', conversation: response };
+  }
+
+  @Get(':receiverId')
+  async getConversation(
+    @Headers('authorization') autHeader: string,
+    @Param('receiverId') receiverId: string,
+  ) {
+    if (!autHeader) {
+      throw new UnauthorizedException('Missing Authorization Token');
+    }
+    return this.messagesService.send(
+      { cmd: 'get-conversation' },
+      { autHeader, receiverId },
+    );
   }
 }
