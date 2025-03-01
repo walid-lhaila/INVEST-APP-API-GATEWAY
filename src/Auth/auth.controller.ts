@@ -16,4 +16,9 @@ export class AuthController {
   login(@Body() loginDto: { username: string; password: string }) {
     return this.authService.send({ cmd: 'login' }, loginDto);
   }
+
+  @Post('getUserByUsername')
+  getUserByUsername(@Body() data: { username: string }) {
+    return this.authService.send({ cmd: 'getUserByUsername' }, data);
+  }
 }
