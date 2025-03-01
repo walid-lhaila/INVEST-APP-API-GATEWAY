@@ -4,7 +4,7 @@ import {
   Inject,
   Post,
   Headers,
-  UnauthorizedException, Get, Delete, Param,
+  UnauthorizedException, Get, Delete, Param, NotFoundException,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
@@ -35,6 +35,14 @@ export class ProjectsController {
       throw new UnauthorizedException('TOKEN IS REQUIRED');
     }
     return this.projectsService.send({ cmd: 'getProjects' }, { token }).toPromise();
+  }
+
+  @Get('getAllByUsername/:username')
+  getProjectByUsername(@Param('username') username: string) {
+    if(!username) {
+      throw new NotFoundException('USERNAME IS REQUIRED');
+    }
+    return this.projectsService.send({ cmd: 'getProjectByUsernameParam'}, username)
   }
 
   @Delete('delete/:projectId')
