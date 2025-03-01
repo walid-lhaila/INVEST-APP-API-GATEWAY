@@ -44,17 +44,18 @@ export class MessagesController {
     return { message: 'Message sent successfully', conversation: response };
   }
 
-  @Get(':receiverId')
-  async getConversation(
+
+  @Get(':conversationId')
+  async getConversationById(
     @Headers('authorization') autHeader: string,
-    @Param('receiverId') receiverId: string,
+    @Param('conversationId') conversationId: string,
   ) {
     if (!autHeader) {
       throw new UnauthorizedException('Missing Authorization Token');
     }
     return this.messagesService.send(
-      { cmd: 'get-conversation' },
-      { autHeader, receiverId },
+      { cmd: 'get-conversation-by-id' },
+      { autHeader, conversationId },
     );
   }
 
@@ -64,8 +65,8 @@ export class MessagesController {
       throw new UnauthorizedException('Missing Authorization Token');
     }
     return this.messagesService.send(
-        { cmd: 'get-all-conversations' },
-        { autHeader },
+      { cmd: 'get-all-conversations' },
+      { autHeader },
     );
   }
 }
