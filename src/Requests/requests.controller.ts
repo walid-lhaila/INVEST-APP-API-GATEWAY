@@ -49,4 +49,12 @@ export class RequestsController {
     };
     return this.requestsService.send({ cmd: 'acceptRequest' }, payload).toPromise();
   }
+
+  @Post('reject')
+  async rejectRequest(@Body('requestId') requestId: string, @Headers('authorization') token: string) {
+    if(!token) {
+      throw new UnauthorizedException('TOKEN IS REQUIRED');
+    }
+    return this.requestsService.send({ cmd: 'rejectRequest' }, {requestId}).toPromise();
+  }
 }
