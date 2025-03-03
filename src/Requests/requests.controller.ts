@@ -36,4 +36,17 @@ export class RequestsController {
     }
     return this.requestsService.send({ cmd: 'getMyRequests' }, {token}).toPromise();
   }
+
+  @Post('accept')
+  async acceptRequest(@Body('requestId') requestId: string, @Body('status') status: string, @Headers('authorization') token: string) {
+    if(!token) {
+      throw new UnauthorizedException('TOKEN IS REQUIRED');
+    }
+    const payload = {
+      token,
+      requestId,
+      status,
+    };
+    return this.requestsService.send({ cmd: 'acceptRequest' }, payload).toPromise();
+  }
 }
