@@ -45,7 +45,7 @@ export class MessagesController {
   }
 
 
-  @Get(':conversationId')
+  @Get('conversation/:conversationId')
   async getConversationById(
     @Headers('authorization') autHeader: string,
     @Param('conversationId') conversationId: string,
