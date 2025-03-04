@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { PostsController } from './posts.controller';
 import { MulterModule } from '@nestjs/platform-express';
+import { FavoritesController } from './favorites.controller';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { MulterModule } from '@nestjs/platform-express';
       dest: './uploads',
     }),
   ],
-  controllers: [PostsController],
+  controllers: [PostsController, FavoritesController],
   providers: [],
 })
 export class PostsModule {}
