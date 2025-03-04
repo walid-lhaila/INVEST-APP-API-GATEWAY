@@ -6,6 +6,8 @@ import {
   Post,
   UnauthorizedException,
   Get,
+  Delete,
+  Param,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
@@ -40,6 +42,23 @@ export class FavoritesController {
     };
     return this.postService
       .send({ cmd: 'getFavoritesByUser' }, payload)
+      .toPromise();
+  }
+
+  @Delete('remove/:favoriteId')
+  async removeFavorite(
+    @Param('favoriteId') favoriteId: string,
+    @Headers('authorization') token: string,
+  ) {
+    if (!token) {
+      throw new UnauthorizedException('TOKEN IS REQUIRED');
+    }
+    const payload = {
+      token,
+      favoriteId,
+    };
+    return this.postService
+      .send({ cmd: 'removeFavorite' }, payload)
       .toPromise();
   }
 }
