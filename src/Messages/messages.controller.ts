@@ -45,7 +45,7 @@ export class MessagesController {
   }
 
 
-  @Get('conversation/:conversationId')
+  @Get(':conversationId')
   async getConversationById(
     @Headers('authorization') autHeader: string,
     @Param('conversationId') conversationId: string,
@@ -68,5 +68,19 @@ export class MessagesController {
       { cmd: 'get-all-conversations' },
       { autHeader },
     );
+  }
+
+  @Post('conversation/:conversationId/mark-as-read')
+  async markMessageAsRead(
+    @Headers('authorization') autHeader: string,
+    @Param('conversationId') conversationId: string,
+  ) {
+    if (!autHeader) {
+      throw new UnauthorizedException('Missing Authorization Token');
+    }
+    return this.messagesService.send(
+      { cmd: 'mark-messages-as-read' },
+      { autHeader, conversationId },
+    ).toPromise();
   }
 }
