@@ -6,6 +6,7 @@ import { PostsModule } from './Posts/posts.module';
 import { ProjectsModule } from './Projects/projects.module';
 import { MessagesModule } from './Messages/messages.module';
 import { RequestsModule } from './Requests/requests.module';
+import { AiModule } from './Ai/ai.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { RequestsModule } from './Requests/requests.module';
     ProjectsModule,
     MessagesModule,
     RequestsModule,
+    AiModule,
   ],
   controllers: [AppController],
   providers: [AppService],
